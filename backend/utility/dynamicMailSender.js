@@ -6,25 +6,20 @@ dotenv.config();
 
 //  entering the details about our smtp server and client -> Creating transporter
 const techDetails = {
-    host: 'smtp.sendgrid.net',
-    port: 465,
+  host: "smtp-relay.brevo.com",
+  port: 587,
     //identify our application -> sender 
     secure: true,
     auth: {
-        user: "apikey",
-        pass: process.env.SENDGRID_API_KEY
+        user: "ecommerce",
+        pass: process.env.BREVO_API_KEY
     }
 }
+
 const transporter = nodemailer.createTransport(techDetails);
 const fs = require("fs");
 
-
-
 /*************************************************/
-
-
-
-
 async function emailSender(to, subject, html, text) {
     try {
         // entering details required to send your Email 
