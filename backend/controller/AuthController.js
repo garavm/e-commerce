@@ -6,10 +6,11 @@ const promisifiedJWTSign = promisify(jwt.sign);
 const promisifiedJWTVerify = promisify(jwt.verify);
 const otpGenerator = require("../utility/generateOtp");
 const { JWT_SECRET } = process.env;
+
 // never -> sync in your server 
 const fs = require("fs");
 const path = require("path");
-
+const bcrypt = require("bcrypt");
 
 const pathToOtpHTML = path.join(__dirname, "../", "utility", "otp.html");
 const HtmlTemplateString = fs.readFileSync(pathToOtpHTML, "utf-8");
@@ -45,7 +46,9 @@ const loginController = async function (req, res) {
         let { email, password } = req.body;
         let user = await UserModel.findOne({ email });
         if (user) {
-            let areEqual = password == user.password;
+            console.log(password,user.password);
+            let areEqual = await bcrypt.compare(password,user.password);
+            console.log("res",areEqual)
             if (areEqual) {
                 // user is authenticated
                 /* 2. Sending the token -> people remember them
@@ -56,13 +59,12 @@ const loginController = async function (req, res) {
                 res.cookie("JWT", token, { maxAge: 90000000, httpOnly: true, path: "/" });
                 res.status(200).json({
                     status: "success",
-                    message:{
-                        name:user.name,
-                        email:user.email,
+                    message: {
+                        name: user.name,
+                        email: user.email,
                     }
                 })
             } else {
-                console.log("err", err)
                 res.status(404).json({
                     status: "failure",
                     message: "email or password is incorrect"

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 // ecommerce -> Amazon 
 const userSchemaRules = {
     name: {
@@ -20,10 +21,6 @@ const userSchemaRules = {
         type: String,
         required: true,
         minlength: 8,
-        // validate property 
-        validate: function () {
-            return this.password == this.confirmPassword
-        }
     },
     createdAt: {
         type: Date,
@@ -33,10 +30,10 @@ const userSchemaRules = {
         type: [mongoose.Schema.ObjectId],
         ref: "bookingModel"
     },
-/****
- *  token -> forget and reset 
- * **/
-token: {
+    /****
+     *  token -> forget and reset 
+     * **/
+    token: {
         type: String
     },
     otpExpiry: {
@@ -54,7 +51,18 @@ token: {
 const userSchema = new mongoose.Schema(userSchemaRules);
 let validCategories = ['Admin', "user", 'Seller'];
 
-
+userSchema.pre("save", async function (next) {
+    const user = this;
+    const password = user.password;
+    const confirmPassword = user.confirmPassword;
+    if (password == confirmPassword) {
+        delete user.confirmPassword
+        user.password = await bcrypt.hash(password, 10);
+    } else {
+        const err = new Error("Password and confirmPassword are not the same ")
+        next(err)
+    }
+})
 // schema-> structure and validation 
 userSchema.pre("save", function (next) {
     const user = this;
