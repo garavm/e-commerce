@@ -1,12 +1,18 @@
-import React from 'react';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
 import { useDispatch, useSelector } from "react-redux";
 import { action } from '../redux/slices/cartSlice';
 
+/*************  ✨ Codeium Command ⭐  *************/
+/**
+ * @description ProductList is a component which renders the list of products 
+ * @param {Object} props - expects a productList as a prop
+ * @returns {ReactElement} - a div containing the list of products
+ */
+/******  a232d2a5-b4a7-4203-b3bd-32af65e6cfe5  *******/
 function ProductList(props) {
     const { productList } = props;
-    const cartProducts = useSelector((store) => { return store.cartReducer.cartProducts })
+    const cartProducts = useSelector((store) => { return store.cart.cartProducts })
     const dispatch = useDispatch();
     const handleAddProduct = (product) => {
         dispatch(action.addToCart(product));
