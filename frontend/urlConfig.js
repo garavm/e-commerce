@@ -1,5 +1,5 @@
 // all the routes over here 
-const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:3001";
+const BASE_URL = "https://e-commerce-backend-1169.onrender.com";
 const  urlConfig = {
     LOGIN_URL: BASE_URL + "/api/auth/login",
     SIGNUP_URL: BASE_URL + "/api/auth/signup",
