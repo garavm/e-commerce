@@ -22,10 +22,14 @@ const corsConfig = {
   origin: true,
   credentials: true,
 };
+
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
 });
+
+// ✅ Trust first proxy (Render, Vercel, etc.)
+app.set("trust proxy", 1); 
 
 app.use(limiter);
 
