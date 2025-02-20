@@ -5,7 +5,11 @@ const { DB_PASSWORD, DB_USER } = process.env;
 
 const dbURL = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster0.qejqc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 // once 
-mongoose.connect(dbURL)
-    .then(function (connection) {
-        console.log("connected to db");
-    }).catch(err => console.log(err))
+mongoose
+  .connect(dbURL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 30000, // Increase timeout to 30 seconds
+  })
+  .then(() => console.log("✅ Connected to MongoDB"))
+  .catch((err) => console.error("❌ MongoDB Connection Failed:", err));
