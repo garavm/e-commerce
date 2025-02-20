@@ -7,8 +7,6 @@ const dbURL = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster0.qejqc.mongodb.ne
 // once 
 mongoose
   .connect(dbURL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
     serverSelectionTimeoutMS: 30000, // Increase timeout to 30 seconds
   })
   .then(() => console.log("✅ Connected to MongoDB"))
