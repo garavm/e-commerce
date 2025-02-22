@@ -7,7 +7,7 @@ dns.setDefaultResultOrder("ipv4first"); // Fixes DNS resolution issue
 
 const { DB_PASSWORD, DB_USER } = process.env;
 
-const dbURL = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster0.qejqc.mongodb.net/test?retryWrites=true&w=majority`;
+const dbURL = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@@cluster0.65e5f.mongodb.net/test?retryWrites=true&w=majority`;
 // once 
 mongoose
   .connect(dbURL, {
