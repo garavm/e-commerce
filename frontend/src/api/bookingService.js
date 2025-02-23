@@ -1,9 +1,12 @@
 import axios from "axios";
 import urlConfig from "../../urlConfig";
 
+axios.defaults.withCredentials = true;
+
+
 export const makeBooking = async (productId, bookingData = { priceAtThatTime: 0 }) => {
   try {
-    // loadCheckoutScript()
+    await loadCheckoutScript()
     const response = await axios.post(
       `${urlConfig.BOOKING}/${productId}`,
       bookingData
@@ -11,19 +14,6 @@ export const makeBooking = async (productId, bookingData = { priceAtThatTime: 0 
     return response.data.message;
   } catch (error) {
     console.error("Booking failed:", error);
-    throw error;
-  }
-};
-
-export const verifyPayment = async (paymentData) => {
-  try {
-    const response = await axios.post(
-      `${urlConfig.BOOKING}/verify`,
-      paymentData
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Payment verification failed:", error);
     throw error;
   }
 };

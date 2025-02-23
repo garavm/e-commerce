@@ -1,7 +1,7 @@
 import ProductList from "../components/ProductList";
 import { useSelector } from "react-redux";
 import { Container, Typography, Box, Button } from "@mui/material";
-import { makeBooking, verifyPayment } from "../api/bookingService";
+import { makeBooking } from "../api/bookingService";
 import useAuth from "../hooks/useAuth";
 import { useCallback } from "react";
 
@@ -32,13 +32,9 @@ function Cart() {
         handler: async function (response) {
           console.log(`Payment ID: ${response.razorpay_payment_id}`);
           console.log(`Order ID: ${response.razorpay_order_id}`);
-          // 🔹 Call backend to verify payment
-          const verifyResponse = await verifyPayment(response);
-          if (verifyResponse.status !== "success") {
-            alert("Payment verification failed!");
-          } else {
-            alert("Payment successful!");
-          }
+          alert("payment id" + response.razorpay_payment_id);
+          alert("order id " + response.razorpay_order_id);
+          alert(response.razorpay_signature);
         },
         prefill: {
           name: user.name,
