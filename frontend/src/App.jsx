@@ -5,7 +5,7 @@ import PageNotFound from './pages/PageNotFound'
 import Home from './pages/Home';
 import ProductDetails from './pages/ProductDetails';
 import Cart from "./pages/Cart";
-import User from './pages/User';
+import User from './pages/user';
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import PaginationProvider from './contexts/PaginationContext';

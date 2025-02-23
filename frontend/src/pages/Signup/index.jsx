@@ -1,9 +1,8 @@
 import { useState } from 'react';
 
-import axios from 'axios';
-import urlConfig from '../../../urlConfig';
 import { Link, useNavigate } from "react-router-dom";
 import './signup.css';
+import { fetchSignup } from '../../api/userService';
 
 function Index() {
     /*************state variables*************/
@@ -22,9 +21,7 @@ function Index() {
             let userDetails = {
                 name, password, confirmPassword, email
             }
-            const resp = await axios.post(urlConfig.SIGNUP_URL, userDetails);
-            const ans = resp.data;
-            console.log(ans);
+            await fetchSignup(userDetails);
             setName("");
             setEmail("");
             setPassword("");

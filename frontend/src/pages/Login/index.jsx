@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import "./login.css"
-import urlConfig from '../../../urlConfig';
-import axios from "axios";
 import useAuth from '../../hooks/useAuth';
+import { fetchLogin } from '../../api/userService';
+
+import "./login.css"
 
 function Login() {
     /*****data for you backend***/
@@ -21,11 +21,7 @@ function Login() {
             let userDetails = {
                 password, email
             }
-            const resp = await axios.post(urlConfig.LOGIN_URL, userDetails,
-                {
-                    withCredentials: true
-                });
-            const user = resp.data.message;
+            const user = await fetchLogin(userDetails);;
             login(user);
 
             setEmail("");
@@ -37,7 +33,6 @@ function Login() {
 
         catch (err) {
             console.log(err.message);
-            console.log(err);
             setLoading(false);
             setErrMsg('Error while doing signup');
             setTimeout(() => {
@@ -47,11 +42,6 @@ function Login() {
         }
 
     }
-    /**
-     * email, password -> verified
-     * protected Routes : profile , orders , -> need your verification -> JWT 
-     * 
-     * **/
     if (loading) return <h1>Loading.....</h1>
     return (
         <div className="signinscreen">

@@ -6,7 +6,7 @@ import {
   CardMedia,
   Typography,
   IconButton,
-  Grid,
+  Grid2,
   Badge,
 } from "@mui/material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
@@ -31,9 +31,9 @@ function ProductList({ productList }) {
           Loading...
         </Typography>
       ) : (
-        <Grid container spacing={3} sx={{ mt: 2 }}>
+        <Grid2 container spacing={3} sx={{ mt: 2 }}>
           {productList.map((product) => (
-            <Grid item xs={12} sm={6} md={4} key={product.id}>
+            <Grid2 item xs={12} sm={6} md={4} key={product.id}>
               <Card
                 sx={{
                   maxWidth: 345,
@@ -92,9 +92,9 @@ function ProductList({ productList }) {
                   </div>
                 </CardContent>
               </Card>
-            </Grid>
+            </Grid2>
           ))}
-        </Grid>
+        </Grid2>
       )}
     </>
   );

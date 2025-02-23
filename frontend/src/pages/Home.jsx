@@ -3,7 +3,7 @@ import {
   Container,
   TextField,
   IconButton,
-  Grid,
+  Grid2,
   Button,
   Typography,
   Box,
@@ -15,8 +15,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ProductList from "../components/ProductList";
 import basicOps from "../utility/basicOps";
 import { usePaginationContext } from "../contexts/PaginationContext";
-import axios from "axios";
-import urlConfig from "../../urlConfig";
+import { fetchAllProducts } from "../api/productService";
 
 function Home() {
   const [products, setProducts] = useState([]);
@@ -29,8 +28,7 @@ function Home() {
   useEffect(() => {
     (async function () {
       try {
-        const resp = await axios.get(urlConfig.ALL_PRODUCT_URL);
-        const productArr = resp.data.message;
+        const productArr = await fetchAllProducts();
         const productMappedArr = productArr.map((product) => ({
           ...product,
           id: product["_id"],
@@ -101,9 +99,9 @@ function Home() {
       </Box>
 
       {/* Products List */}
-      <Grid container spacing={3}>
+      <Grid2 container spacing={3}>
         <ProductList productList={filteredSortedgroupByArr} />
-      </Grid>
+      </Grid2>
 
       {/* Pagination */}
       <Box
