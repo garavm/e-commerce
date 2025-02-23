@@ -5,9 +5,9 @@ dotenv.config();
 const dns = require("dns");
 dns.setDefaultResultOrder("ipv4first"); // Fixes DNS resolution issue
 
-const { DB_PASSWORD, DB_USER } = process.env;
+const { DB_PASSWORD, DB_USER, DB_NAME } = process.env;
 
-const dbURL = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster0.65e5f.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const dbURL = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster0.65e5f.mongodb.net/${DB_NAME}?retryWrites=true&w=majority&appName=Cluster0`;
 // once 
 mongoose
   .connect(dbURL, {
