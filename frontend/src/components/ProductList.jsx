@@ -46,7 +46,10 @@ function ProductList({ productList }) {
                 <CardMedia
                   component="img"
                   height="200"
-                  image={product.images[0]}
+                  image={
+                    product.images[0] ||
+                    "https://cdn.shopify.com/s/images/admin/no-image-large.gif"
+                  }
                   alt={product.title}
                   sx={{ objectFit: "contain", padding: "10px" }}
                 />
@@ -66,10 +69,10 @@ function ProductList({ productList }) {
                     }}
                   >
                     <IconButton
-                      color="primary"
-                      onClick={() => handleAddProduct(product)}
+                      color="error"
+                      onClick={() => handleDeleteProduct(product)}
                     >
-                      <AddBoxIcon />
+                      <IndeterminateCheckBoxIcon />
                     </IconButton>
                     <Badge
                       badgeContent={
@@ -81,10 +84,10 @@ function ProductList({ productList }) {
                       color="secondary"
                     />
                     <IconButton
-                      color="error"
-                      onClick={() => handleDeleteProduct(product)}
+                      color="primary"
+                      onClick={() => handleAddProduct(product)}
                     >
-                      <IndeterminateCheckBoxIcon />
+                      <AddBoxIcon />
                     </IconButton>
                   </div>
                 </CardContent>
