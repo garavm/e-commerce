@@ -1,71 +1,105 @@
-import AddBoxIcon from '@mui/icons-material/AddBox';
-import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
 import { useDispatch, useSelector } from "react-redux";
-import { action } from '../redux/slices/cartSlice';
+import { action } from "../redux/slices/cartSlice";
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  IconButton,
+  Grid,
+  Badge,
+} from "@mui/material";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import IndeterminateCheckBoxIcon from "@mui/icons-material/IndeterminateCheckBox";
 
-/*************  ✨ Codeium Command ⭐  *************/
-/**
- * @description ProductList is a component which renders the list of products 
- * @param {Object} props - expects a productList as a prop
- * @returns {ReactElement} - a div containing the list of products
- */
-/******  a232d2a5-b4a7-4203-b3bd-32af65e6cfe5  *******/
-function ProductList(props) {
-    const { productList } = props;
-    const cartProducts = useSelector((store) => { return store.cart.cartProducts })
-    const dispatch = useDispatch();
-    const handleAddProduct = (product) => {
-        dispatch(action.addToCart(product));
-    }
+function ProductList({ productList }) {
+  const cartProducts = useSelector((store) => store.cart.cartProducts);
+  const dispatch = useDispatch();
 
-    const handleDeleteProduct = (product) => {
-        dispatch(action.deleteFromCart(product));
-    }
+  const handleAddProduct = (product) => {
+    dispatch(action.addToCart(product));
+  };
 
-    return (
-        <>
-            {productList == null ? <h3 > Loading...</h3> :
-                productList.map((product) => {
-                    return (<div className="product" key={product.id}>
-                        <img src={product.images[0]}
-                            className='product_image' />
-                        <div className="product_meta">
-                            <p className="product_title">{product.title}</p>
-                            <p className='Price'>$ {product.price}</p>
-                        </div>
-                        <div className="add_to_cart_container">
-                            <AddBoxIcon
-                                onClick={() => { handleAddProduct(product) }}
-                            ></AddBoxIcon>
-                            <div className="currentCartCount">{<PrintCount cartProducts={cartProducts} id={product.id}></PrintCount>}</div>
-                            <IndeterminateCheckBoxIcon
-                                onClick={() => { handleDeleteProduct(product) }}
-                            >
-                            </IndeterminateCheckBoxIcon>
-                        </div>
-                    </div>
-                    )
-                })}
-        </>
-    )
+  const handleDeleteProduct = (product) => {
+    dispatch(action.deleteFromCart(product));
+  };
+
+  return (
+    <>
+      {productList === null ? (
+        <Typography variant="h5" align="center" sx={{ mt: 3 }}>
+          Loading...
+        </Typography>
+      ) : (
+        <Grid container spacing={3} sx={{ mt: 2 }}>
+          {productList.map((product) => (
+            <Grid item xs={12} sm={6} md={4} key={product.id}>
+              <Card
+                sx={{
+                  maxWidth: 345,
+                  boxShadow: 3,
+                  borderRadius: 2,
+                  transition: "0.3s",
+                  "&:hover": { boxShadow: 6 },
+                }}
+              >
+                <CardMedia
+                  component="img"
+                  height="200"
+                  image={product.images[0]}
+                  alt={product.title}
+                  sx={{ objectFit: "contain", padding: "10px" }}
+                />
+                <CardContent>
+                  <Typography variant="h6" gutterBottom>
+                    {product.title}
+                  </Typography>
+                  <Typography variant="body1" color="textSecondary">
+                    $ {product.price}
+                  </Typography>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      marginTop: "10px",
+                    }}
+                  >
+                    <IconButton
+                      color="primary"
+                      onClick={() => handleAddProduct(product)}
+                    >
+                      <AddBoxIcon />
+                    </IconButton>
+                    <Badge
+                      badgeContent={
+                        <PrintCount
+                          cartProducts={cartProducts}
+                          id={product.id}
+                        />
+                      }
+                      color="secondary"
+                    />
+                    <IconButton
+                      color="error"
+                      onClick={() => handleDeleteProduct(product)}
+                    >
+                      <IndeterminateCheckBoxIcon />
+                    </IconButton>
+                  </div>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      )}
+    </>
+  );
 }
-function PrintCount(props) {
-    const { cartProducts, id } = props;
-    let quanitity = 0;
-    for (let i = 0; i < cartProducts.length; i++) {
-        if (cartProducts[i].id == id) {
-            quanitity = cartProducts[i].indQuantity
-        }
-    }
-    return (<>
-        {quanitity}
-    </>)
 
+function PrintCount({ cartProducts, id }) {
+  let quantity = cartProducts.find((item) => item.id === id)?.indQuantity || 0;
+  return <Typography variant="body2">{quantity}</Typography>;
 }
-
-
-
 
 export default ProductList;
-
-

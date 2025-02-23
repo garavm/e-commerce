@@ -5,10 +5,9 @@ import useAuth from "../hooks/useAuth";
 const RequireAuth = () => {
     const { user } = useAuth();
     const location = useLocation();
-console.log(user);
     return (
         user ? <Outlet />: 
-        <Navigate to="/signin" 
+        <Navigate to="/login" 
         state={{ from: location }} replace />
     );
 }

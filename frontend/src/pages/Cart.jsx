@@ -1,18 +1,26 @@
-import ProductList from '../components/ProductList';
+import ProductList from "../components/ProductList";
 import { useSelector } from "react-redux";
+import { Container, Typography, Box } from "@mui/material";
+
 function Cart() {
-  const productList = useSelector((store) => { return store.cart.cartProducts })
+  const productList = useSelector((store) => store.cart.cartProducts);
+
   return (
-    <>
-      <h1>Cart</h1>
-      <h2>Add to Product List</h2>
-      <div className="cart_product_wrapper">
+    <Container maxWidth="md">
+      <Box sx={{ textAlign: "center", mt: 3 }}>
+        <Typography variant="h4" gutterBottom>
+          🛒 Your Shopping Cart
+        </Typography>
+        <Typography variant="subtitle1" color="textSecondary">
+          Add or remove products from your cart.
+        </Typography>
+      </Box>
 
-        <ProductList productList={productList}></ProductList>
-      </div>
-    </>
-
-  )
+      <Box sx={{ mt: 4 }}>
+        <ProductList productList={productList} />
+      </Box>
+    </Container>
+  );
 }
 
-export default Cart
+export default Cart;

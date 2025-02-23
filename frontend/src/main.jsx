@@ -16,9 +16,6 @@ ReactDOM.createRoot(
       <AuthProvider>
         <BrowserRouter>
           <App />
-          {/* <Routing></Routing> */}
-          {/* <Context></Context> */}
-          {/* <ThemeManger></ThemeManger> */}
         </BrowserRouter>
       </AuthProvider>
 

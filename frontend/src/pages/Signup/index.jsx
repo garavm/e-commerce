@@ -1,8 +1,9 @@
-import './signup.css';
-import React, { useState } from 'react';
+import { useState } from 'react';
+
 import axios from 'axios';
 import urlConfig from '../../../urlConfig';
 import { Link, useNavigate } from "react-router-dom";
+import './signup.css';
 
 function Index() {
     /*************state variables*************/
@@ -16,15 +17,6 @@ function Index() {
 
     const navigate = useNavigate();
     const handleSubmit = async () => {
-
-        /***
-         * 1. you have take all the state var-> that represent your user
-         * 2. Make a post request to your API
-         * 3. if signup -> 
-         *              success -> reroute it to login & clear all the state variables
-         *              failure -> show the error for few second    
-         * ***/
-
         try {
             setLoading(true);
             let userDetails = {
@@ -43,7 +35,6 @@ function Index() {
 
         catch (err) {
             console.log(err.message);
-            console.log(err);
             setLoading(false);
             setErrMsg('Error while doing signup');
             setTimeout(() => {
@@ -68,12 +59,12 @@ function Index() {
                         }}
                     >
                         <div >
-                            <i class="fas fa-arrow-circle-left fa-5x"></i>
+                            <i className="fas fa-arrow-circle-left fa-5x"></i>
                         </div>
                         <p>Signup</p>
                     </div>
 
-                    <label for="name">Name</label>
+                    <label htmlFor="name">Name</label>
                     <input
                         type="text"
                         id="name"
@@ -83,7 +74,7 @@ function Index() {
                         onChange={e => setName(e.target.value)}
                     />
 
-                    <label for="email">Email</label>
+                    <label htmlFor="email">Email</label>
                     <input
                         type="email"
 
@@ -92,7 +83,7 @@ function Index() {
                         value={email}
                         onChange={e => setEmail(e.target.value)}
                     />
-                    <label for="password">Password</label>
+                    <label htmlFor="password">Password</label>
                     <input
                         type="password"
                         name="password"
@@ -100,7 +91,7 @@ function Index() {
                         value={password}
                         onChange={e => setPassword(e.target.value)}
                     />
-                    <label for="password">Confirm Password</label>
+                    <label htmlFor="password">Confirm Password</label>
                     <input
                         type="password"
                         id="password"
@@ -109,7 +100,7 @@ function Index() {
                         value={confirmPassword}
                         onChange={e => setConfirmPassword(e.target.value)}
                     />
-                    <Link to="/signin" className="link">
+                    <Link to="/login" className="link">
                         <span>Already have an account ?</span>
                     </Link>
 

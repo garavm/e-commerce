@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import "./login.css"
 import urlConfig from '../../../urlConfig';
 import axios from "axios";
 import useAuth from '../../hooks/useAuth';
 
-function Index() {
+function Login() {
     /*****data for you backend***/
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("");
@@ -14,16 +14,8 @@ function Index() {
     const [errMsg, setErrMsg] = useState("");
     const navigate = useNavigate();
 
-    const { setAuth } = useAuth();
+    const { login } = useAuth();
     const handleSubmit = async () => {
-
-        /***
-         * 1. you have take all the state var-> that represent your user
-         * 2. Make a post request to your API+ tell you backend that you want to accept the cookies 
-         * 3. if login  -> 
-         *              success -> reroute it to home & clear all the state variables
-         *              failure -> show the error for few second    
-         * ***/
         try {
             setLoading(true);
             let userDetails = {
@@ -34,9 +26,8 @@ function Index() {
                     withCredentials: true
                 });
             const user = resp.data.message;
-            setAuth(user);
+            login(user);
 
-            // console.log(ans);
             setEmail("");
             setPassword("");
 
@@ -76,12 +67,12 @@ function Index() {
                         }}
                     >
                         <div style={{ cursor: 'pointer' }} onClick={() => { }}>
-                            <i class="fas fa-arrow-circle-left fa-5x"></i>
+                            <i className="fas fa-arrow-circle-left fa-5x"></i>
                         </div>
                         <p>Sign In</p>
                     </div>
 
-                    <label for="email">Email</label>
+                    <label htmlFor="email">Email</label>
                     <input
                         type="email"
                         id="lname"
@@ -90,7 +81,7 @@ function Index() {
                         value={email}
                         onChange={e => setEmail(e.target.value)}
                     />
-                    <label for="password">Password</label>
+                    <label htmlFor="password">Password</label>
                     <input
                         type="password"
                         id="lname"
@@ -111,4 +102,4 @@ function Index() {
     )
 }
 
-export default Index
+export default Login;
