@@ -7,7 +7,7 @@ const mongoSanitize = require("express-mongo-sanitize");
 const helmet = require("helmet");
 // including env variables
 dotenv.config();
-const { PORT, DB_PASSWORD, DB_USER } = process.env;
+const { PORT } = process.env;
 /**********************connection to our DB********************************/
 require("./utility/connectWithDB");
 // with this your creating simple app -> api
@@ -51,7 +51,6 @@ app.use("/api/review", ReviewRouter);
 /******************handler functions ***************/
 // 404 route not found
 app.use(function cb(req, res) {
-  // console.log("");
   // response
   res.status(404).json({
     status: "failure",

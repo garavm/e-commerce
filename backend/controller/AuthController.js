@@ -28,7 +28,6 @@ const signupController = async function (req, res) {
             status: "success"
         })
     } catch (err) {
-        console.log(err);
         res.status(500).json({
             message: err.message,
             status: "success"
@@ -46,16 +45,13 @@ const loginController = async function (req, res) {
         let { email, password } = req.body;
         let user = await UserModel.findOne({ email });
         if (user) {
-            console.log(password,user.password);
             let areEqual = await bcrypt.compare(password,user.password);
-            console.log("res",areEqual)
             if (areEqual) {
                 // user is authenticated
                 /* 2. Sending the token -> people remember them
                        * */
                 // payload : id of that user 
                 let token = await promisifiedJWTSign({ id: user["_id"] }, JWT_SECRET);
-                console.log("sendning token");
                 res.cookie("JWT", token, { maxAge: 90000000, httpOnly: true, path: "/" });
                 res.status(200).json({
                     status: "success",
@@ -190,14 +186,13 @@ const resetPasswordController = async function (req, res) {
 
 const protectRouteMiddleWare = async function (req, res, next) {
     try {
-        let jwttoken = req.cookies.JWT;
+        const jwttoken = req.cookies.JWT;
         let decryptedToken = await promisifiedJWTVerify(jwttoken, JWT_SECRET);
 
         if (decryptedToken) {
             let userId = decryptedToken.id;
             // adding the userId to the req object
             req.userId = userId;
-            console.log("authenticated");
             next();
         }
     } catch (err) {
@@ -214,11 +209,8 @@ const isAdminMiddleWare = async function (req, res, next) {
         let id = req.userId;
         let user = await UserModel.findById(id);
         if (user.role == "Admin") {
-            console.log("authorized admin");
-
             next();
         } else {
-            console.log("returning back ")
             res.status(401).json({
                 status: "failure",
                 "message": "You are not authorized to do this action "
@@ -242,10 +234,8 @@ const isAuthorizedMiddleWare = function (allowedRoles) {
             let user = await UserModel.findById(id);
             let isAuthorized = allowedRoles.includes(user.role);
             if (isAuthorized) {
-                console.log("authorized user");
                 next();
             } else {
-                console.log("returning back ")
                 res.status(401).json({
                     status: "failure",
                     "message": "You are not authorized to do this action "

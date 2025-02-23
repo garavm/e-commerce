@@ -26,8 +26,6 @@ async function getAllProductHandler(req, res) {
         let query = req.query;
         let selectQuery = query.select;
         let sortQuery = query.sort
-        // console.log("selectParam", selectParam);
-        // console.log("sortParam", sortParam);
         // make a find query -> searching for the product
         let queryResPromise = ProductModel.find()
         // sort the entries 
@@ -35,7 +33,6 @@ async function getAllProductHandler(req, res) {
             // "price inc"
             let order = sortQuery.split(" ")[1];
             let sortParam = sortQuery.split(" ")[0];
-            // console.log("order",order,"sortParam",sortParam);
             // applying this logic for inc and dec 
             if (order == "inc") {
                 queryResPromise = queryResPromise.sort(sortParam);

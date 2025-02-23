@@ -22,7 +22,6 @@ const createFactory = (ElementModel) => {
 const getAllFactory = (ElementModel) => {
   return async function (req, res) {
     try {
-      console.log("I am inside  get method");
       const elementDataStore = await ElementModel.find();
       if (elementDataStore.length == 0) {
         throw new Error("No elements are present");

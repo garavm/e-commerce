@@ -23,7 +23,6 @@ const fs = require("fs");
 async function emailSender(to, subject, html, text) {
     try {
         // entering details required to send your Email 
-        console.log(process.env.SENDER_EMAIL, "subject", subject, "text", text);
 
         let emailObject = {
             to: to, // Change to your recipient
@@ -35,7 +34,6 @@ async function emailSender(to, subject, html, text) {
         }
         await transporter.sendMail(emailObject);
     } catch (err) {
-        console.log(err);
         throw new Error(err.message)
     }
 
