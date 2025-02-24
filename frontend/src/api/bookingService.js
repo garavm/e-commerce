@@ -21,7 +21,20 @@ export const makeBooking = async (productId, bookingData = { priceAtThatTime: 0 
 export const getAllBookings = async () => {
   try {
     const response = await axios.get(urlConfig.BOOKING);
-    return response.data.message;
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch bookings:", error);
+    throw error;
+  }
+};
+
+export const verifyPayment = async (bookingData) => {
+  try {
+    const response = await axios.post(
+      `${urlConfig.BOOKING}/verify-payment`,
+      bookingData
+    );
+    return response.data;
   } catch (error) {
     console.error("Failed to fetch bookings:", error);
     throw error;

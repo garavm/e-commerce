@@ -60,6 +60,13 @@ function NavBar() {
                 open={Boolean(anchorEl)}
                 onClose={handleMenuClose}
               >
+                <MenuItem
+                  component={Link}
+                  to="/bookings"
+                  onClick={handleMenuClose}
+                >
+                  Bookings
+                </MenuItem>
                 <MenuItem component={Link} to="/user" onClick={handleMenuClose}>
                   Profile
                 </MenuItem>

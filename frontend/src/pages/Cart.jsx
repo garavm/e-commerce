@@ -1,7 +1,7 @@
 import ProductList from "../components/ProductList";
 import { useSelector } from "react-redux";
 import { Container, Typography, Box, Button } from "@mui/material";
-import { makeBooking } from "../api/bookingService";
+import { makeBooking, verifyPayment } from "../api/bookingService";
 import useAuth from "../hooks/useAuth";
 import { useCallback } from "react";
 
@@ -32,9 +32,22 @@ function Cart() {
         handler: async function (response) {
           console.log(`Payment ID: ${response.razorpay_payment_id}`);
           console.log(`Order ID: ${response.razorpay_order_id}`);
-          alert("payment id" + response.razorpay_payment_id);
-          alert("order id " + response.razorpay_order_id);
-          alert(response.razorpay_signature);
+          console.log(`Signature: ${response.razorpay_signature}`);
+          alert("Payment successful!");
+          // ✅ Step 1: Send Payment Verification Request to Backend
+          try {
+            const verifyData = await verifyPayment(response);
+            if (verifyData.status === "success") {
+              // ✅ Step 2: Redirect User to Success Page or Show Confirmation
+              alert("Payment Verified! Your booking is confirmed.");
+              window.location.href = "/order-success"; // Redirect to success page
+            } else {
+              alert("Payment verification failed. Please contact support.");
+            }
+          } catch (error) {
+            console.error("Error verifying payment:", error);
+            alert("Something went wrong. Please try again.");
+          }
         },
         prefill: {
           name: user.name,
