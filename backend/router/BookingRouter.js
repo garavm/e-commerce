@@ -6,17 +6,18 @@ const {
   initialBookingController,
   verifyPaymentController,
   getAllBookings,
+  verifyWebhookController,
 } = require("../controller/BookingController");
+
+// ✅ Frontend calls this route to verify payment
+BookingRouter.post("/verify-payment", verifyPaymentController);
+
+// ✅ Razorpay Webhook calls this route automatically
+BookingRouter.post("/verify", express.raw({ type: "application/json" }), verifyWebhookController);
 
 
 // ✅ Protect all booking routes except Razorpay webhook verification
 BookingRouter.use(protectRouteMiddleWare);
-
-// ✅ Razorpay webhook verification (without authentication)
-BookingRouter.post(
-  "/verify",
-  verifyPaymentController
-);
 
 // ✅ Validate `productId` before reaching the controller
 BookingRouter.post(

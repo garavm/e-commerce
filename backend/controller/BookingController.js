@@ -4,7 +4,12 @@ const BookingModel = require("../model/BookingModel");
 
 const Razorpay = require("razorpay");
 const UserModel = require("../model/UserModel");
+
+const {
+  validatePaymentVerification,
+} = require("razorpay/dist/utils/razorpay-utils");
 const { PUBLIC_KEY, PRIVATE_KEY } = process.env;
+
 const razorpayInstance = new Razorpay({
   key_id: PUBLIC_KEY,
   key_secret: PRIVATE_KEY,
@@ -36,7 +41,7 @@ const initialBookingController = async (req, res) => {
     /************** Create a booking document ************/
     const bookingObject = await BookingModel.create({
       user: userId,
-      product: new mongoose.Types.ObjectId(productId), // ✅ Convert to ObjectId
+      product: new mongoose.Types.ObjectId(productId),
       priceAtThatTime,
       status,
     });
@@ -113,30 +118,23 @@ const getAllBookings = async (req, res) => {
   }
 };
 
-const verifyPaymentController = async function (req, res) {
+const verifyWebhookController = async function (req, res) {
   try {
     const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
     if (!WEBHOOK_SECRET) {
       return res.status(500).json({ message: "Webhook secret is missing" });
     }
 
-    // ✅ Ensure `req.body` exists before using it
-    if (!req.body || Object.keys(req.body).length === 0) {
-      return res.status(400).json({ message: "Invalid webhook payload" });
-    }
-
-    // ✅ Generate SHA256 HMAC Signature
-    const shasum = crypto.createHmac("sha256", WEBHOOK_SECRET);
-    shasum.update(JSON.stringify(req.body)); // ✅ Ensured `req.body` is not undefined
-    const freshSignature = shasum.digest("hex");
-
-    // ✅ Check if Razorpay signature exists
     const razorPaySign = req.headers["x-razorpay-signature"];
     if (!razorPaySign) {
       return res.status(400).json({ message: "Missing Razorpay signature" });
     }
 
-    // ✅ Secure comparison of signatures
+    // ✅ Verify Razorpay Webhook Signature
+    const shasum = crypto.createHmac("sha256", WEBHOOK_SECRET);
+    shasum.update(req.body);
+    const freshSignature = shasum.digest("hex");
+
     if (
       !crypto.timingSafeEqual(
         Buffer.from(freshSignature),
@@ -148,8 +146,11 @@ const verifyPaymentController = async function (req, res) {
         .json({ message: "Invalid signature, possible tampering" });
     }
 
-    // ✅ Extract Order ID from Webhook Payload
-    const orderId = req.body.razorpay_payment_id;
+    // ✅ Extract Order ID
+    const orderId =
+      req.body.payload?.payment?.entity?.order_id ||
+      req.body.payload?.order?.entity?.id;
+
     if (!orderId) {
       return res
         .status(400)
@@ -172,21 +173,58 @@ const verifyPaymentController = async function (req, res) {
 
     return res
       .status(200)
-      .json({ message: "Payment verified and booking updated successfully" });
+      .json({ message: "Payment verified via Razorpay Webhook" });
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({
-      status: "failure",
-      message: err.message,
-    });
+    return res.status(500).json({ status: "failure", message: err.message });
   }
 };
 
-module.exports = { verifyPaymentController };
+
+const verifyPaymentController = async function (req, res) {
+  try {
+    const { razorpay_payment_id, razorpay_order_id, razorpay_signature } =
+      req.body;
+
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return res.status(400).json({ message: "Missing payment details" });
+    }
+
+    // ✅ Use Razorpay SDK's built-in function for verification
+    const isValid = validatePaymentVerification(
+      { order_id: razorpay_order_id, payment_id: razorpay_payment_id },
+      razorpay_signature,
+      PRIVATE_KEY
+    );
+
+    if (!isValid) {
+      return res.status(400).json({ message: "Invalid payment signature" });
+    }
+
+    // ✅ Find and Update Booking in Database
+    const bookingObject = await BookingModel.findOne({
+      payment_order_id: razorpay_order_id,
+    });
+
+    if (!bookingObject) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    bookingObject.status = "success";
+    await bookingObject.save();
+
+    return res
+      .status(200)
+      .json({ status: "success", message: "Payment verified successfully" });
+  } catch (err) {
+    return res.status(500).json({ status: "failure", message: err.message });
+  }
+};
+
 
 
 module.exports = {
   initialBookingController,
-  getAllBookings,
+  verifyWebhookController,
   verifyPaymentController,
+  getAllBookings,
 };
